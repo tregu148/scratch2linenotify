@@ -82,7 +82,11 @@ class LineNotificationExtension {
                 {
                     opcode: 'sendLineNotification',
                     blockType: BlockType.COMMAND,
-                    text: "aaa [TEXT]",//ここいじったら、拡張消えた
+                    text: formatMessage({
+                        id: 'lineNotifications.sendNotification',
+                        default: 'send notification [TEXT]',
+                        description: 'Block text for sending a LINE notification'
+                    }),
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
@@ -98,7 +102,8 @@ class LineNotificationExtension {
     }
 
     sendLineNotification(args) {
-        // const message = Cast.toString(args.TEXT);
+        const message = Cast.toString(args.TEXT);
+        window.prompt(message);
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
         const headers = {
             "Authorization": `Bearer ${this.lineNotifyToken}`,
@@ -128,6 +133,7 @@ class LineNotificationExtension {
             log.info(`LINE notification sent successfully: ${text}`);
         })
         .catch(err => {
+            window.prompt('error');
             log.error('Failed to send LINE notification', err);
         });
     }
