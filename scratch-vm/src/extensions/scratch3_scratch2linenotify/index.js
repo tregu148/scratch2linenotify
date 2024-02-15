@@ -103,7 +103,7 @@ class LineNotificationExtension {
 
     sendLineNotification(args) {
         const message = Cast.toString(args.TEXT);
-        window.prompt(message);
+        window.prompt(message); 
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
         const headers = {
             "Authorization": `Bearer ${this.lineNotifyToken}`,
