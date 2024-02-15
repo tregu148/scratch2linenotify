@@ -95,7 +95,7 @@ class LineNotificationExtension {
     }
 
     sendLineNotification(args) {
-        const message = Cast.toString(args.TEXT);
+        // const message = Cast.toString(args.TEXT);
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
 
         const headers = {
@@ -104,8 +104,11 @@ class LineNotificationExtension {
         };
 
         const body = {
-            message: message
+            message: "aaa"
         };
+        // const body = {
+        //     message: message
+        // };
 
         return fetchWithTimeout(lineNotifyApiUrl, {
             method: 'POST',
