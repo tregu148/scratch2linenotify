@@ -14,265 +14,117 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYA
 
 /**
  * @typedef {{
- * answerBlockText: string,
- * answerBlockDefaultValue: string,
- * answerFuncEnterOpenAIApiKey: string,
- * clearMessageLogsBlockText: string,
- * setMaxTokensBlockText: string,
- * setTemperatureBlockText: string,
- * setApiKeyBlockText: string,
- * setApiKeyBlockDefaultValue: string,
- * setApiKeyFuncPromptText: string,
- * answerFuncFailedToGetAnswer: string }} I18nData
- */
+* sendNotificationBlockText: string,
+* sendNotificationBlockDefaultValue: string,
+* enterLineTokenText: string,
+* notificationSuccessText: string,
+* notificationFailureText: string
+* }} I18nData
+*/
 
 /**
- * @type{{ en: I18nData, ja: I18nData, ja-Hira: I18nData }}
- */
+* @type{{ en: I18nData, ja: I18nData, ja-Hira: I18nData }}
+*/
 const I18n = {
-    'en': {
-        answerBlockText:
-            '[TEXT] Answer',
-        answerBlockDefaultValue:
-            'How can I get better at Scratch?',
-        answerFuncEnterOpenAIApiKey:
-            'Enter the API key obtained from the openai.com site',
-        clearMessageLogsBlockText:
-            'Clear message logs',
-        setMaxTokensBlockText:
-            'Set max tokens [NUMBER]',
-        setApiKeyBlockText:
-            'Set API key',
-        setTemperatureBlockText:
-            'Set temperature (0-2) [NUMBER]',
-        setTimeoutBlockText:
-            'Set timeout [NUMBER]',
-        setApiKeyBlockDefaultValue:
-            'API key',
-        setApiKeyFuncPromptText:
-            'Enter the API key.',
-        answerFuncFailedToGetAnswer:
-            'Failed to get answer',
-    },
-    'ja': {
-        answerBlockText:
-            '[TEXT]の答えaaa',
-        answerBlockDefaultValue:
-            'Scratch が上手くなるには?bbb',
-        answerFuncEnterOpenAIApiKey:
-            'openai.com のサイトからAPIキーを取得してセットください',
-        clearMessageLogsBlockText:
-            'メッセージログをクリア',
-        setMaxTokensBlockText:
-            '最大トークン数を設定[NUMBER]',
-        setTemperatureBlockText:
-            'temperature を設定 (0-2) [NUMBER]',
-        setTimeoutBlockText:
-            'timeout を設定 [NUMBER]',
-        setApiKeyBlockText:
-            'APIキーをセット',
-        setApiKeyBlockDefaultValue:
-            'API キー',
-        setApiKeyFuncPromptText:
-            'APIキーを入力してください',
-        answerFuncFailedToGetAnswer:
-            '答えを取得できませんでした',
-
-    },
-    'ja-Hira': {
-        answerBlockText:
-            '[TEXT]のこたえあああ',
-        answerBlockDefaultValue:
-            'スクラッチがうまくなるには?',
-        answerFuncEnterOpenAIApiKey:
-            'オープンエーアイエーアイキーをにゅうりょくしてください',
-        clearMessageLogsBlockText:
-            'メッセージログをクリア',
-        setMaxTokensBlockText:
-            'さいだいトークンすうをせってい[NUMBER]',
-        setTemperatureBlockText:
-            'テンパラチュアをせってい (0-2) [NUMBER]',
-        setTimeoutBlockText:
-            'タイムアウトをせってい [NUMBER]',
-        setApiKeyBlockText:
-            'エーピーアイキーをセット',
-        setApiKeyBlockDefaultValue:
-            'エーピーアイキー',
-        setApiKeyFuncPromptText:
-            'エーピーアイキーをにゅうりょくしてください',
-        answerFuncFailedToGetAnswer:
-            'こたえをしゅとくできませんでした'
-    }
+   en: {
+       sendNotificationBlockText: 'send LINE notification with message [MESSAGE]',
+       sendNotificationBlockDefaultValue: 'Hello, Scratch!',
+       enterLineTokenText: 'Enter your LINE token',
+       notificationSuccessText: 'Notification sent successfully!',
+       notificationFailureText: 'Failed to send notification'
+   },
+   ja: {
+       sendNotificationBlockText: '[MESSAGE]というメッセージでLINE通知を送る',
+       sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
+       enterLineTokenText: 'LINEのトークンを入力してください',
+       notificationSuccessText: '通知を送信しました！',
+       notificationFailureText: '通知の送信に失敗しました'
+   },
+   'ja-Hira': {
+       sendNotificationBlockText: '[MESSAGE]というメッセージでLINEつうちをおくる',
+       sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
+       enterLineTokenText: 'LINEのとーくんをにゅうりょくしてください',
+       notificationSuccessText: 'つうちをおくりました！',
+       notificationFailureText: 'つうちのおくりにしっぱいしました'
+   }
 }
+
 
 /**
  * Class for the new blocks in Scratch 3.0
  * @param {Runtime} runtime - the runtime instantiating this block package.
  * @constructor
  */
-class Scratch3ChatGPTBlocks {
-    SESSION_STORAGE_KEY_CHATGPT_API_KEY = 'chatGptApiKey'
 
+class LineNotificationExtension {
     constructor(runtime) {
-        /**
-         * The runtime instantiating this block package.
-         * @type {Runtime}
-         */
         this.runtime = runtime;
-        this.apiKey = window.sessionStorage.getItem(this.SESSION_STORAGE_KEY_CHATGPT_API_KEY) || '';
-        this.maxTokens = 300;
-        this.temperature = 1;
-        this.timeout = 30000;
-        this._initMessageLog();
-        const currentLocale = formatMessage.setup().locale;
-        const availableLocales = ['en', 'ja', 'ja-Hira',];
-        /**
-         * @type {I18nData}
-         */
-        this.i18n = I18n[availableLocales.includes(currentLocale) ? currentLocale : 'en'];
+        // Store the LINE Notify token securely, for example in environment variables or another secure place
+        this.lineNotifyToken = 'rqle1CJFrdOVgiRT7rGMfYShDZxcLYFPZgihAv3TRj4'; // Replace with your environment variable or secure storage access
     }
 
-    _initMessageLog() {
-        this.messageLogs = [
-            { "role": "system", "content": "You are a helpful assistant in the Scratch programming language." },
-        ];
-    }
-
-    /**
-    * @returns {object} metadata for this extension and its blocks.
-    */
     getInfo() {
         return {
-            id: 'scratch2linenotify',
-            name: 'scratch2linenotify',
-            blockIconURI: blockIconURI,
+            id: 'lineNotifications',
+            name: formatMessage({
+                id: 'lineNotifications.categoryName',
+                default: 'LINE Notifications',
+                description: 'Name of the extension category'
+            }),
             blocks: [
                 {
-                    opcode: 'answer',
-                    blockType: BlockType.REPORTER,
-                    text: this.i18n.answerBlockText,
+                    opcode: 'sendLineNotification',
+                    blockType: BlockType.COMMAND,
+                    text: formatMessage({
+                        id: 'lineNotifications.sendNotification',
+                        default: 'send notification [MESSAGE]',
+                        description: 'Block text for sending a LINE notification'
+                    }),
                     arguments: {
-                        TEXT: {
+                        MESSAGE: {
                             type: ArgumentType.STRING,
-                            defaultValue: this.i18n.answerBlockDefaultValue,
+                            defaultValue: 'Hello, this is a test notification from Scratch!'
                         }
                     }
-                },
-                {
-                    opcode: 'clearMessageLogs',
-                    blockType: BlockType.COMMAND,
-                    text: this.i18n.clearMessageLogsBlockText,
-
-                },
-                {
-                    opcode: 'setMaxTokens',
-                    blockType: BlockType.COMMAND,
-                    text: this.i18n.setMaxTokensBlockText,
-                    arguments: {
-                        NUMBER: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: this.maxTokens
-                        }
-                    }
-                },
-                {
-                    opcode: 'setTemperature',
-                    blockType: BlockType.COMMAND,
-                    text: this.i18n.setTemperatureBlockText,
-                    arguments: {
-                        NUMBER: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: this.temperature
-                        }
-                    }
-                },
-                {
-                    opcode: 'setTimeout',
-                    blockType: BlockType.COMMAND,
-                    text: this.i18n.setTimeoutBlockText,
-                    arguments: {
-                        NUMBER: {
-                            type: ArgumentType.NUMBER,
-                            defaultValue: this.timeout
-                        }
-                    }
-                },
-                {
-                    opcode: 'setApiKey',
-                    blockType: BlockType.COMMAND,
-                    text: this.i18n.setApiKeyBlockText,
-                },
+                }
             ],
+            menus: {
+                // Define any menus here if necessary
+            }
         };
     }
 
-    answer(args) {
-        if (this.apiKey === this.i18n.setApiKeyBlockDefaultValue || this.apiKey === '') {
-            return this.i18n.answerFuncEnterOpenAIApiKey
-        }
+    sendLineNotification(args) {
+        const message = Cast.toString(args.MESSAGE);
+        const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
 
-        const question = Cast.toString(args.TEXT);
-        if (question === this._lastQuestion) {
-            return this._lastAnswer
-        }
+        const headers = {
+            "Authorization": `Bearer ${this.lineNotifyToken}`,
+            "Content-Type": "application/x-www-form-urlencoded"
+        };
 
-        const questionMessageLog = { "role": "user", "content": question }
-        const params = {
+        const body = {
+            message: message
+        };
+
+        return fetchWithTimeout(lineNotifyApiUrl, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.apiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [
-                    ...this.messageLogs, questionMessageLog
-                ],
-                max_tokens: this.maxTokens,
-                temperature: this.temperature,
-            })
-        }
-        const completionPromise = fetchWithTimeout('https://api.openai.com/v1/chat/completions', params, this.timeout)
-            .then(response => response.json()
-            ).then(json => {
-                if(json.error !== undefined) {
-                    return `[${json.error.code}: ${json.error.type}] ${json.error.message}`
-                }
-                this._lastAnswer = json.choices[0].message.content
-                this._lastQuestion = question
-                this.messageLogs.push(questionMessageLog)
-                this.messageLogs.push({ role: "assistant", content: this._lastAnswer })
-                return (this._lastAnswer)
-            }).catch(error => {
-                log.warn(error);
-                return (`${this.i18n.answerFuncFailedToGetAnswer} | ${error}`);
-            });
-
-        return completionPromise;
-    }
-
-    clearMessageLogs() {
-        this._lastAnswer = '';
-        this._lastQuestion = '';
-        this._initMessageLog();
-    }
-
-    setApiKey() {
-        this.apiKey = window.prompt(this.i18n.setApiKeyFuncPromptText);
-        window.sessionStorage.setItem(this.SESSION_STORAGE_KEY_CHATGPT_API_KEY, this.apiKey);
-    }
-
-    setMaxTokens(args) {
-        this.maxTokens = Number(args.NUMBER);
-    }
-
-    setTemperature(args) {
-        this.temperature = Number(args.NUMBER);
-    }
-
-    setTimeout(args) {
-        this.timeout = Number(args.NUMBER);
+            headers: headers,
+            body: body
+        }, 5000) // 5-second timeout
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Notification failed');
+            }
+            return response.text();
+        })
+        .then(text => {
+            log.info(`LINE notification sent successfully: ${text}`);
+        })
+        .catch(err => {
+            log.error('Failed to send LINE notification', err);
+        });
     }
 }
 
-module.exports = Scratch3ChatGPTBlocks;
+module.exports = LineNotificationExtension;

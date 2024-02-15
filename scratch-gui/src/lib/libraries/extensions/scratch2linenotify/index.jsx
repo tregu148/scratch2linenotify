@@ -16,7 +16,7 @@ const entry = {
   name: 'scratch2linenotify',
   extensionId: 'scratch2linenotify',
   extensionURL: 'https://tregu148.github.io/scratch2linenotify.mjs',
-  collaborator: 'tregu148,ichiroc',
+  collaborator: 'tregu148',
   iconURL: scratch2linenotifyIconURL,
   insetIconURL: scratch2linenotifyInsetIconURL,
   description: (
