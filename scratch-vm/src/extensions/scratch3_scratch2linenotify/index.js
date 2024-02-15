@@ -27,21 +27,21 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYA
 */
 const I18n = {
    en: {
-       sendNotificationBlockText: 'send LINE notification with message [MESSAGER]',
+       sendNotificationBlockText: 'send LINE notification with message [MESSAGE]',
        sendNotificationBlockDefaultValue: 'Hello, Scratch!',
        enterLineTokenText: 'Enter your LINE token',
        notificationSuccessText: 'Notification sent successfully!',
        notificationFailureText: 'Failed to send notification'
    },
    ja: {
-       sendNotificationBlockText: '[MESSAGER]というメッセージでLINE通知を送る',
+       sendNotificationBlockText: '[MESSAGE]というメッセージでLINE通知を送る',
        sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
        enterLineTokenText: 'LINEのトークンを入力してください',
        notificationSuccessText: '通知を送信しました！',
        notificationFailureText: '通知の送信に失敗しました'
    },
    'ja-Hira': {
-       sendNotificationBlockText: '[MESSAGER]というメッセージでLINEつうちをおくる',
+       sendNotificationBlockText: '[MESSAGE]というメッセージでLINEつうちをおくる',
        sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
        enterLineTokenText: 'LINEのとーくんをにゅうりょくしてください',
        notificationSuccessText: 'つうちをおくりました！',
@@ -82,7 +82,7 @@ class LineNotificationExtension {
                 {
                     opcode: 'sendLineNotification',
                     blockType: BlockType.COMMAND,
-                    text: this.I18n.sendNotificationBlockText,
+                    text: "aaa",
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
