@@ -81,7 +81,7 @@ class LineNotificationExtension {
                         description: 'Block text for sending a LINE notification'
                     }),
                     arguments: {
-                        MESSAGE: {
+                        TEXT: {
                             type: ArgumentType.STRING,
                             defaultValue: 'Hello, this is a test notification from Scratch!'
                         }
@@ -95,7 +95,7 @@ class LineNotificationExtension {
     }
 
     sendLineNotification(args) {
-        const message = Cast.toString(args.MESSAGE);
+        const message = Cast.toString(args.TEXT);
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
 
         const headers = {
@@ -103,9 +103,9 @@ class LineNotificationExtension {
             "Content-Type": "application/x-www-form-urlencoded"
         };
 
-        const body = new URLSearchParams({
+        const body = {
             message: message
-        }).toString();
+        };
 
         return fetchWithTimeout(lineNotifyApiUrl, {
             method: 'POST',
