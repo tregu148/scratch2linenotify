@@ -111,7 +111,7 @@ class LineNotificationExtension {
         };
 
         const body = {
-            message: "aaa"
+            message: "aaagogo"
         };
         // const body = {
         //     message: message
