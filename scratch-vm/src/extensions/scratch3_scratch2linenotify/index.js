@@ -82,7 +82,7 @@ class LineNotificationExtension {
                 {
                     opcode: 'sendLineNotification',
                     blockType: BlockType.COMMAND,
-                    text: "aaa",
+                    text: "aaa [TEXT]",//ここいじったら、拡張消えた
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
@@ -124,6 +124,7 @@ class LineNotificationExtension {
             return response.text();
         })
         .then(text => {
+            window.prompt(text);
             log.info(`LINE notification sent successfully: ${text}`);
         })
         .catch(err => {
