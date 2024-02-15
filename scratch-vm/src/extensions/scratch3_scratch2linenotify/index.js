@@ -82,11 +82,7 @@ class LineNotificationExtension {
                 {
                     opcode: 'sendLineNotification',
                     blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'lineNotifications.sendNotification',
-                        default: 'send notification [TEXT]',
-                        description: 'Block text for sending a LINE notification'
-                    }),
+                    text: "send notification [TEXT]",
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
@@ -102,8 +98,8 @@ class LineNotificationExtension {
     }
 
     sendLineNotification(args) {
-        const message = Cast.toString(args.TEXT);
         window.prompt(message); 
+        const message = Cast.toString(args.TEXT);
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
         const headers = {
             "Authorization": `Bearer ${this.lineNotifyToken}`,
