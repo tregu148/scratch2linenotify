@@ -27,21 +27,21 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYA
 */
 const I18n = {
    en: {
-       sendNotificationBlockText: 'send LINE notification with message [MESSAGE]',
+       sendNotificationBlockText: 'send LINE notification with message [TEXT]',
        sendNotificationBlockDefaultValue: 'Hello, Scratch!',
        enterLineTokenText: 'Enter your LINE token',
        notificationSuccessText: 'Notification sent successfully!',
        notificationFailureText: 'Failed to send notification'
    },
    ja: {
-       sendNotificationBlockText: '[MESSAGE]というメッセージでLINE通知を送る',
+       sendNotificationBlockText: '[TEXT]というメッセージでLINE通知を送る',
        sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
        enterLineTokenText: 'LINEのトークンを入力してください',
        notificationSuccessText: '通知を送信しました！',
        notificationFailureText: '通知の送信に失敗しました'
    },
    'ja-Hira': {
-       sendNotificationBlockText: '[MESSAGE]というメッセージでLINEつうちをおくる',
+       sendNotificationBlockText: '[TEXT]というメッセージでLINEつうちをおくる',
        sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
        enterLineTokenText: 'LINEのとーくんをにゅうりょくしてください',
        notificationSuccessText: 'つうちをおくりました！',
@@ -58,28 +58,31 @@ const I18n = {
 
 class LineNotificationExtension {
     constructor(runtime) {
+        /**
+         * The runtime instantiating this block package.
+         * @type {Runtime}
+         */
         this.runtime = runtime;
-        // Store the LINE Notify token securely, for example in environment variables or another secure place
+        const currentLocale = formatMessage.setup().locale;
+        const availableLocales = ['en', 'ja', 'ja-Hira',];
+        /**
+         * @type {I18nData}
+         */
+        this.i18n = I18n[availableLocales.includes(currentLocale) ? currentLocale : 'en'];
+
         this.lineNotifyToken = 'rqle1CJFrdOVgiRT7rGMfYShDZxcLYFPZgihAv3TRj4'; // Replace with your environment variable or secure storage access
     }
 
     getInfo() {
         return {
             id: 'lineNotifications',
-            name: formatMessage({
-                id: 'lineNotifications.categoryName',
-                default: 'LINE Notifications',
-                description: 'Name of the extension category'
-            }),
+            name: 'lineNotifications',
+            blockIconURI: blockIconURI,
             blocks: [
                 {
                     opcode: 'sendLineNotification',
                     blockType: BlockType.COMMAND,
-                    text: formatMessage({
-                        id: 'lineNotifications.sendNotification',
-                        default: 'send notification [MESSAGE]',
-                        description: 'Block text for sending a LINE notification'
-                    }),
+                    text: this.I18n.sendNotificationBlockText,
                     arguments: {
                         TEXT: {
                             type: ArgumentType.STRING,
@@ -97,7 +100,6 @@ class LineNotificationExtension {
     sendLineNotification(args) {
         // const message = Cast.toString(args.TEXT);
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
-
         const headers = {
             "Authorization": `Bearer ${this.lineNotifyToken}`,
             "Content-Type": "application/x-www-form-urlencoded"
