@@ -106,7 +106,6 @@ class LineNotificationExtension {
             "Content-Type": "application/x-www-form-urlencoded"
         };
 
-        const body = new URLSearchParams({ 'message': "aaa" });
         // const body = {
         //     message: message
         // };
@@ -114,7 +113,7 @@ class LineNotificationExtension {
         return fetchWithTimeout(lineNotifyApiUrl, {
             method: 'POST',
             headers: headers,
-            body: body
+            body: `message=${encodeURIComponent(message)}`
         }, 5000) // 5-second timeout
         .then(response => {
             if (!response.ok) {
