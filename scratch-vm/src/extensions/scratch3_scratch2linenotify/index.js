@@ -106,9 +106,7 @@ class LineNotificationExtension {
             "Content-Type": "application/x-www-form-urlencoded"
         };
 
-        const body = {
-            message: "aaagogo"
-        };
+        const body = `message=${encodeURIComponent("aaa")}`;
         // const body = {
         //     message: message
         // };

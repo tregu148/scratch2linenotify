@@ -2,64 +2,19 @@
 
 [日本語](README.ja.md)
 
-scratch2linenotify is a Scratch extension that allows you to develop applications using OpenAI's ChatGPT through Scratch blocks.
+scratch2linenotifyは、Scratchブロックを通じてLINE通知を送ることができるScratch拡張機能です。
 
 https://ichiroc.github.io/scratch2linenotify/
 
-## Usage
+## 使用方法
 
-To use scratch2linenotify:
+scratch2linenotifyを使用するには:
 
-1. You need to obtain an API Key from the [OpenAI website](https://openai.com/) in advance.
-1. Open the [official website](https://ichiroc.github.io/scratch2linenotify/).
-1. Open the "Choose an Extension" screen and select "scratch2linenotify".
-1. Execute the "Set API Key" block first and set the API Key obtained from the OpenAI website.
-1. When you execute the "Get answer to ~" block, you can get a response from ChatGPT.
+1. 事前に[OpenAIのウェブサイト](https://openai.com/)からAPIキーを取得してください。
+2. [公式ウェブサイト](https://ichiroc.github.io/scratch2linenotify/)を開きます。
+3. 「拡張機能を選択」画面を開き、「scratch2linenotify」を選択します。
+4. 最初に「APIキーを設定」ブロックを実行し、OpenAIのウェブサイトから取得したAPIキーを設定します。
+5. 「〜への回答を取得」ブロックを実行すると、ChatGPTからの応答を取得できます。
 
-## About API usage fees
 
-scratch2linenotify uses the **gpt-3.5-turbo** model of OpenAI's API.
 
-There is a fee for using OpenAI's API.
-Each input and output string is broken down into units called tokens, and a fee is charged per token.
-
-For more information, please see the following page
-
-https://openai.com/pricing
-
-To find out how many tokens a given string will be, the following tool is useful.
-
-https://platform.openai.com/tokenizer
-
-## For Developers
-
-To run the scratch2linenotify extension on your computer, follow these steps:
-
-1. Clone the scratch-gui repository:
-
-```sh
-git clone --depth 1 git@github.com:LLK/scratch-gui.git
-cd scratch-gui
-npm install
-```
-
-2. Clone the scratch2linenotify repository (this repository):
-
-Run the following commands in the scratch-gui directory.
-
-```sh
-git clone git@github.com:ichiroc/scratch2linenotify.git
-sh scratch2linenotify/install.sh
-```
-
-3. Run npm start:
-
-```sh
-npm start
-```
-
-You can access it at http://localhost:8601.
-
-## Release Notes
-
-https://github.com/ichiroc/scratch2linenotify/releases
