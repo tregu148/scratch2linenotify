@@ -106,7 +106,7 @@ class LineNotificationExtension {
             "Content-Type": "application/x-www-form-urlencoded"
         };
 
-        const body = `message=aaa`;
+        const body = new URLSearchParams({ 'message': "aaa" });
         // const body = {
         //     message: message
         // };
