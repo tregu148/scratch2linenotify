@@ -113,7 +113,7 @@ class LineNotificationExtension {
         return fetchWithTimeout(lineNotifyApiUrl, {
             method: 'POST',
             headers: headers,
-            body: `message=${encodeURIComponent(message)}`
+            body: new URLSearchParams({ 'message': message })
         }, 5000) // 5-second timeout
         .then(response => {
             if (!response.ok) {
