@@ -98,8 +98,8 @@ class LineNotificationExtension {
     }
 
     sendLineNotification(args) {
-        window.prompt(message); 
         const message = Cast.toString(args.TEXT);
+        window.prompt(message); 
         const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
         const headers = {
             "Authorization": `Bearer ${this.lineNotifyToken}`,
@@ -129,7 +129,7 @@ class LineNotificationExtension {
             log.info(`LINE notification sent successfully: ${text}`);
         })
         .catch(err => {
-            window.prompt('error');
+            window.prompt('error'+err.message);
             log.error('Failed to send LINE notification', err);
         });
     }
