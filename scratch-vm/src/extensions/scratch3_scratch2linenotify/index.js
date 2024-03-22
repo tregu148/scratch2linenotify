@@ -83,7 +83,7 @@ class ProductSubmissionExtension {
         const message = Cast.toString(args.MESSAGE);
         const apiUrl = 'https://script.google.com/macros/s/AKfycbzRDL7niBkoWFbhSxmwr0dtVsHHhDJ6AbZsUk8DpKHjp4uUvBXB0sNo9DtD_9oKgBEv/exec';
 
-        return fetch(apiUrl, {
+        return fetchWithTimeout(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
