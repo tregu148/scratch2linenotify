@@ -26,42 +26,28 @@ const blockIconURI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYA
 * @type{{ en: I18nData, ja: I18nData, ja-Hira: I18nData }}
 */
 const I18n = {
-   en: {
-       sendNotificationBlockText: 'send LINE notification with message [MESSAGE]',
-       sendNotificationBlockDefaultValue: 'Hello, Scratch!',
-       enterLineTokenText: 'Enter your LINE token',
-       notificationSuccessText: 'Notification sent successfully!',
-       notificationFailureText: 'Failed to send notification'
-   },
-   ja: {
-       sendNotificationBlockText: '[MESSAGE]というメッセージでLINE通知を送る',
-       sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
-       enterLineTokenText: 'LINEのトークンを入力してください',
-       notificationSuccessText: '通知を送信しました！',
-       notificationFailureText: '通知の送信に失敗しました'
-   },
-   'ja-Hira': {
-       sendNotificationBlockText: '[MESSAGE]というメッセージでLINEつうちをおくる',
-       sendNotificationBlockDefaultValue: 'こんにちは、スクラッチ！',
-       enterLineTokenText: 'LINEのとーくんをにゅうりょくしてください',
-       notificationSuccessText: 'つうちをおくりました！',
-       notificationFailureText: 'つうちのおくりにしっぱいしました'
-   }
-}
+    en: {
+        submitProductBlockText: 'submit message [MESSAGE]',
+        submitProductBlockDefaultValue: 'Check out this amazing product!',
+        submitSuccessText: 'Successed to submitt',
+        submitFailureText: 'Failed to submit product'
+    },
+    ja: {
+        submitProductBlockText: '[MESSAGE] というメッセージを送信する',
+        submitProductBlockDefaultValue: 'この素晴らしい製品をチェックしてください！',
+        submitSuccessText: '送信しました！',
+        submitFailureText: '送信に失敗しました'
+    },
+    'ja-Hira': {
+        submitProductBlockText: '[MESSAGE] というメッセージをそうしんする',
+        submitProductBlockDefaultValue: 'このすばらしいせいひんをちぇっくしてください！',
+        submitSuccessText: 'そうしんしました！',
+        submitFailureText: 'そうしんにしっぱいしました'
+    }
+};
 
-
-/**
- * Class for the new blocks in Scratch 3.0
- * @param {Runtime} runtime - the runtime instantiating this block package.
- * @constructor
- */
-
-class LineNotificationExtension {
+class ProductSubmissionExtension {
     constructor(runtime) {
-        /**
-         * The runtime instantiating this block package.
-         * @type {Runtime}
-         */
         this.runtime = runtime;
         const currentLocale = formatMessage.setup().locale;
         const availableLocales = ['en', 'ja', 'ja-Hira',];
@@ -70,66 +56,55 @@ class LineNotificationExtension {
          */
         this.i18n = I18n[availableLocales.includes(currentLocale) ? currentLocale : 'en'];
 
-        this.lineNotifyToken = 'rqle1CJFrdOVgiRT7rGMfYShDZxcLYFPZgihAv3TRj4'; // Replace with your environment variable or secure storage access
     }
 
     getInfo() {
         return {
-            id: 'lineNotifications',
-            name: 'lineNotifications',
+            id: 'productSubmission',
+            name: 'Product Submission',
             blockIconURI: blockIconURI,
             blocks: [
                 {
-                    opcode: 'sendLineNotification',
+                    opcode: 'submitProduct',
                     blockType: BlockType.COMMAND,
-                    text: "send notification [TEXT]",
+                    text: this.i18n.submitProductBlockText,
                     arguments: {
-                        TEXT: {
+                        MESSAGE: {
                             type: ArgumentType.STRING,
-                            defaultValue: 'Hello, this is a test notification from Scratch!'
+                            defaultValue: this.i18n.submitProductBlockDefaultValue
                         }
                     }
                 }
-            ],
-            menus: {
-                // Define any menus here if necessary
-            }
+            ]
         };
     }
 
-    sendLineNotification(args) {
-        const message = Cast.toString(args.TEXT);
-        // window.prompt(message); 
-        const lineNotifyApiUrl = 'https://notify-api.line.me/api/notify';
-        const headers = {
-            "Authorization": `Bearer rqle1CJFrdOVgiRT7rGMfYShDZxcLYFPZgihAv3TRj4`,
-            "Content-Type": "application/x-www-form-urlencoded"
-        };
+    submitProduct(args) {
+        const message = Cast.toString(args.MESSAGE);
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzRDL7niBkoWFbhSxmwr0dtVsHHhDJ6AbZsUk8DpKHjp4uUvBXB0sNo9DtD_9oKgBEv/exec';
 
-        // const body = {
-        //     message: message
-        // };
-
-        return fetchWithTimeout(lineNotifyApiUrl, {
+        return fetch(apiUrl, {
             method: 'POST',
-            headers: headers,
-            body: new URLSearchParams({ 'message': message })
-        }, 5000) // 5-second timeout
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Notification failed');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.text();
+            return response.json();
         })
-        .then(text => {
-            window.prompt(text);
-            log.info(`LINE notification sent successfully: ${text}`);
+        .then(data => {
+            log.info(`Product submitted successfully: ${data.message}`);
+            return this.i18n.submitSuccessText;
         })
         .catch(err => {
-            window.prompt('error'+err.message);
-            log.error('Failed to send LINE notification', err);
+            log.error(`Failed to submit product: ${err.message}`);
+            return this.i18n.submitFailureText;
         });
     }
 }
 
-module.exports = LineNotificationExtension;
+module.exports = ProductSubmissionExtension;
