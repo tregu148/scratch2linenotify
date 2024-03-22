@@ -54,7 +54,6 @@ class ProductSubmissionExtension {
          */
         this.runtime = runtime;
         this.timeout = 30000;
-        this._initMessageLog();
         const currentLocale = formatMessage.setup().locale;
         const availableLocales = ['en', 'ja', 'ja-Hira',];
         /**
