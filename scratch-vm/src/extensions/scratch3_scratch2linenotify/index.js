@@ -93,21 +93,7 @@ class ProductSubmissionExtension {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ message: message })
-        },this.timeout)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            log.info(`Product submitted successfully: ${data.message}`);
-            return this.i18n.submitSuccessText;
-        })
-        .catch(err => {
-            log.error(`Failed to submit product: ${err.message}`);
-            return this.i18n.submitFailureText;
-        });
+        },this.timeout);
     }
 }
 
