@@ -29,7 +29,7 @@ const I18n = {
     en: {
         submitProductBlockText: 'submit message [MESSAGE]',
         submitProductBlockDefaultValue: 'Check out this amazing product!',
-        submitSuccessText: 'Successed to submitt',
+        submitSuccessText: 'Successed to submited successfully!',
         submitFailureText: 'Failed to submit product'
     },
     ja: {
@@ -48,19 +48,14 @@ const I18n = {
 
 class ProductSubmissionExtension {
     constructor(runtime) {
-        /**
-         * The runtime instantiating this block package.
-         * @type {Runtime}
-         */
         this.runtime = runtime;
-        this.timeout = 30000;
-        this._initMessageLog();
         const currentLocale = formatMessage.setup().locale;
         const availableLocales = ['en', 'ja', 'ja-Hira',];
         /**
          * @type {I18nData}
          */
         this.i18n = I18n[availableLocales.includes(currentLocale) ? currentLocale : 'en'];
+
     }
 
     getInfo() {
@@ -88,13 +83,13 @@ class ProductSubmissionExtension {
         const message = Cast.toString(args.MESSAGE);
         const apiUrl = 'https://script.google.com/macros/s/AKfycbzRDL7niBkoWFbhSxmwr0dtVsHHhDJ6AbZsUk8DpKHjp4uUvBXB0sNo9DtD_9oKgBEv/exec';
 
-        return fetchWithTimeout(apiUrl, {
+        return fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ message: message })
-        },this.timeout)
+        })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
