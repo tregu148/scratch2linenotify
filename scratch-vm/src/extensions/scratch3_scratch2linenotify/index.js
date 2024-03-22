@@ -92,7 +92,7 @@ class ProductSubmissionExtension {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ message: message })
+            body: JSON.stringify({ message: 'hello world!' })
         },this.timeout);
     }
 }
